@@ -9,57 +9,58 @@ import (
 	"strings"
 )
 
-//replace position 1 with the value 12 and replace position 2 with the
-//value 2
+//part 1 is the answer for noun = 12 and verb = 2
 
 func main() {
 	b, _ := ioutil.ReadAll(os.Stdin)
-	prog := strings.Split(string(b), ",")
-	for i, v := range prog {
-		fmt.Println(i, v)
-	}
+	orig := strings.Split(string(b), ",")
 
-	prog[1] = "12"
-	prog[2] = "2"
+	for i := 0; i < 100; i++ {
+		for j := 0; j < 100; j++ {
+			prog := make([]string, len(orig))
+			copy(prog, orig)
+			noun := strconv.Itoa(i)
+			verb := strconv.Itoa(j)
+			prog[1] = noun
+			prog[2] = verb
 
+			code := "0"
+			pc := 0
+		Loop:
+			for {
+				code = prog[pc]
+				switch code {
+				case "1":
+					p1 := atoi(prog[pc+1])
+					op1 := atoi(prog[p1])
+					p2 := atoi(prog[pc+2])
+					op2 := atoi(prog[p2])
+					p3 := atoi(prog[pc+3])
 
-	code := "0"
-	pc := 0
-	for {
-		fmt.Println(pc)
-		code = prog[pc]
-		switch code {
-		case "1":
-			p1 := atoi(prog[pc+1])
-			op1 := atoi(prog[p1])
-			p2 := atoi(prog[pc+2])
-			op2 := atoi(prog[p2])
-			p3 := atoi(prog[pc+3])
+					prog[p3] = strconv.Itoa(op1 + op2)
+					pc = pc + 4
+				case "2":
+					p1 := atoi(prog[pc+1])
+					op1 := atoi(prog[p1])
+					p2 := atoi(prog[pc+2])
+					op2 := atoi(prog[p2])
+					p3 := atoi(prog[pc+3])
 
-			fmt.Println("op1", op1)
-			prog[p3] = strconv.Itoa(op1 + op2)
-			pc = pc + 4
-		case "2":
-			p1 := atoi(prog[pc+1])
-			op1 := atoi(prog[p1])
-			p2 := atoi(prog[pc+2])
-			op2 := atoi(prog[p2])
-			p3 := atoi(prog[pc+3])
-
-			prog[p3] = strconv.Itoa(op1 * op2)
-			pc = pc + 4
-		case "99":
-			fmt.Println("HALT!")
-			for i, v := range prog {
-				fmt.Println(i, v)
+					prog[p3] = strconv.Itoa(op1 * op2)
+					pc = pc + 4
+				case "99":
+					if prog[0] == "19690720" {
+						fmt.Println("HALT!")
+						fmt.Printf("noun %v verb %v \n", noun, verb)
+						fmt.Println("POS 0", prog[0])
+					}
+					break Loop
+				default:
+					panic("oh dear")
+				}
 			}
-			fmt.Println("POS 0", prog[0])
-			os.Exit(0)
-		default:
-			panic("oh dear")
 		}
 	}
-
 }
 
 func atoi(s string) int {
