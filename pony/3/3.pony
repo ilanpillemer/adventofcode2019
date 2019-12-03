@@ -10,8 +10,10 @@ use "collections"
 // to each intersection.
 
 // you can then get what you want with some some simple unix tools
-// the correct answer for part 2 for was deduced by
+// the correct answer for part 2 was deduced by
 // `stable env ponyc -d && ./3 <in | sort -n | head -1`
+
+// you could add a couple more lines to do this with Sort. I did not.
 
 actor Main
   new create(env: Env) =>
