@@ -3,11 +3,11 @@ use "itertools"
 use "regex"
 use "collections"
 
-//dependencies of regex must be installed with stable or othewise
-//dependency of LineNotify is in the same folder as linenotify.pony
+// dependency of regex must be installed with stable or otherwise
+// dependency of LineNotify is in the same folder as linenotify.pony
 
-//sends to stdout and unordered list of all the step distances
-//to each intersection.
+// sends to stdout and unordered list of all the step distances
+// to each intersection.
 
 // you can then get what you want with some some simple unix tools
 // the correct answer for part 2 for was deduced by
