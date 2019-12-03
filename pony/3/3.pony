@@ -17,8 +17,9 @@ class A
   try
     var x:I32 = 0
     var y:I32 = 0
+    var steps:U32 = 0
 
-    var set:Set[String] = Set[String]
+    var m:Map[String,U32] = Map[String,U32]
     let dir = recover ref s.split(",") end
     for s' in dir.values() do
 //      Debug.out(s')
@@ -28,39 +29,46 @@ class A
       match matched(1)?
       | "U" =>
 	 for i in Range(0,n.usize()?) do
+	 steps = steps + 1
 	 y = y - 1
 	 let here = x.string() + "," + y.string()
-	 set.set(here)
+	 m.insert_if_absent(here,steps)
          end
       | "D" =>
 	 for i in Range(0,n.usize()?) do
+	 steps = steps + 1
 	 y = y + 1
 	 let here = x.string() + "," + y.string()
-	 set.set(here)
+	 m.insert_if_absent(here,steps)
          end
       | "L" =>
 	 for i in Range(0,n.usize()?) do
+	 steps = steps + 1	 
 	 x = x - 1
 	 let here = x.string() + "," + y.string()
-	 set.set(here)
+	 m.insert_if_absent(here,steps)
          end
       | "R" =>
 	 for i in Range(0,n.usize()?) do
+	 steps = steps + 1	 
 	 x = x + 1
 	 let here = x.string() + "," + y.string()
-	 set.set(here)
+	 m.insert_if_absent(here,steps) 
          end
        end
     end
-    for s' in set.values() do
-      var value = counts.get_or_else(s',0)
-      value = value + 1
-      if value > 1 then
-       let p = s'.split(",")
-       let man = p(0)?.i32()?.abs() + p(1)?.i32()?.abs()
-       Debug.out(man.string() + " " + s' + " " + value.string())
+    for s' in m.keys() do
+      if counts.contains(s') then
+        var v1 = m.get_or_else(s',0)
+	//Debug.out("v1 " + v1.string())
+	var v2 = counts(s')?
+	//Debug.out("v2 " + v2.string())	
+	var value = v1 + v2
+        if value > 0 then
+          Debug.out(value.string())
+        end
       end
-      counts.insert(s', value)
+      counts.insert(s',m.get_or_else(s',0))
     end
    end
      
