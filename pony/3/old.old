@@ -1,0 +1,31 @@
+use "debug"
+use "itertools"
+
+actor Main
+  new create(env: Env) =>
+    env.out.print("2019 in Pony.. Day 1")
+    env.out.print("====================")
+    //env.input(recover LineNotify(A) end,512)
+    Subset(4,B(env)).search()
+    //Permu(4,B(env)).search()
+
+class A 
+  fun ref apply(s: String) =>
+    Debug.out(s)
+  
+  fun dispose() =>
+    None
+
+class B
+  let _env: Env
+  new create(env: Env) =>
+    _env = env
+    
+  fun ref apply(a: Array[U8]) =>
+     Iter[U8](a.values())
+       .map[None]({(x: U8) => _env.out.write(x.string())})
+       .run()
+     _env.out.print("")
+
+
+  
