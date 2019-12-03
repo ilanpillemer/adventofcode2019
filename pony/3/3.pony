@@ -3,12 +3,20 @@ use "itertools"
 use "regex"
 use "collections"
 
+//dependencies of regex must be installed with stable or othewise
+//dependency of LineNotify is in the same folder as linenotify.pony
+
+//sends to stdout and unordered list of all the step distances
+//to each intersection.
+
+// you can then get what you want with some some simple unix tools
+// the correct answer for part 2 for was deduced by
+// `stable env ponyc -d && ./3 <in | sort -n | head -1`
+
 actor Main
   new create(env: Env) =>
-    env.out.print("2019 in Pony.. Day 3")
-    env.out.print("====================")
     env.input(recover LineNotify(A) end,512)
- 
+
 class A
 
   var counts: Map[String,U32] = Map[String,U32] 
@@ -22,7 +30,6 @@ class A
     var m:Map[String,U32] = Map[String,U32]
     let dir = recover ref s.split(",") end
     for s' in dir.values() do
-//      Debug.out(s')
       let r = Regex("(\\w)(\\d+)")?
       let matched = r(s')?
       let n = matched(2)?
@@ -60,9 +67,7 @@ class A
     for s' in m.keys() do
       if counts.contains(s') then
         var v1 = m.get_or_else(s',0)
-	//Debug.out("v1 " + v1.string())
 	var v2 = counts(s')?
-	//Debug.out("v2 " + v2.string())	
 	var value = v1 + v2
         if value > 0 then
           Debug.out(value.string())
@@ -71,12 +76,7 @@ class A
       counts.insert(s',m.get_or_else(s',0))
     end
    end
-     
-
 
   fun dispose() =>
-//    for v in counts.values() do
-//     Debug.out(v.string())
-//    end
    None
 
