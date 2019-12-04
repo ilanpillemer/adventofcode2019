@@ -17,8 +17,16 @@ actor Main
   fun ref rule1(s: String): Bool =>
      try
        let r = Regex("(\\d)\\1")?
-       r(s)? 
-       true
+       let m = MatchIterator(r,s)
+       var found: Bool = false
+       for matched in m do
+        let l: String = matched(1)?
+	let l3: String = l + l + l
+        if not s.contains(l3) then
+         found = true
+	end
+       end
+       found
      else
        false
      end
