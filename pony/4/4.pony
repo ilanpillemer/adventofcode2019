@@ -1,48 +1,49 @@
 use "debug"
 use "collections"
 use "regex"
+use "itertools"
+
+primitive R
+   fun rule1 (i':USize): Bool =>
+      var found: Bool = false
+      let s:String = i'.string()
+       try
+         let r = Regex("(\\d)\\1")?
+         let m = MatchIterator(r,s)
+         for matched in m do
+          if not s.contains(matched(1)?.mul(3)) then
+           found = true
+          end
+         end
+         found
+       else
+         false
+       end
+
+  fun rule2 (i':USize): Bool =>
+    var found:Bool = true
+    let s:String = i'.string()   
+    try
+      for c in Range(0,s.size()-1) do
+       if s(c)? > s(c+1)? then
+         found = false
+       end
+      end
+      found
+    else
+      false
+    end
 
 actor Main
   new create(env: Env) =>
     env.out.print("2019 Day 4")
-    var count:U32 = 0
-    for i in Range(347312,805915) do
-      if rule1(i.string()) and rule2(i.string())then
-	count = count + 1
-      end
-    end
+
+    var count:USize = 
+    Iter[USize](Range(347312,805915))
+     .filter(R~rule1())
+     .filter(R~rule2())
+     .count()
     Debug.out("total " +  count.string())
-
-
-  fun ref rule1(s: String): Bool =>
-     try
-       let r = Regex("(\\d)\\1")?
-       let m = MatchIterator(r,s)
-       var found: Bool = false
-       for matched in m do
-        let l: String = matched(1)?
-	let l3: String = l + l + l
-        if not s.contains(l3) then
-         found = true
-	end
-       end
-       found
-     else
-       false
-     end
-
-   fun ref rule2(s: String): Bool =>
-   try
-     for c in Range(0,s.size()-1) do
-      if s(c)? > s(c+1)? then
-        return false
-      end
-     end
-     return true
-   else
-     Debug.out("wtf " + s)
-     true 
-   end
 
 // Part 1
 // It is a six-digit number.
