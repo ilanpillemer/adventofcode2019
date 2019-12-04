@@ -15,7 +15,7 @@ actor Main
     Debug.out("total " +  count.string())
 
 primitive R
-   fun rule1 (s: String ): Bool =>
+   fun rule1 (s: String): Bool =>
      try 
        Iter[Match](MatchIterator(Regex("(\\d)\\1")?,s))
 	.any({(m)? => not s.contains(m(1)?.mul(3)) })
