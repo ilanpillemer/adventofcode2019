@@ -31,17 +31,11 @@ primitive R
        end
 
   fun rule2 (i':USize): Bool =>
-    let s:String = i'.string()   
-    try
-      for c in Range(0,s.size()-1) do
-       if s(c)? > s(c+1)? then
-         return false
-       end
-      end
-      true
-    else
-      false
-    end
+    let s: String = i'.string()   
+    not Iter[USize](Range(0,s.size()-1))
+        .any({(c: USize)? => s(c)? > s(c+1)?})
+     
+
 
 // Part 1
 // It is a six-digit number.
