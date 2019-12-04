@@ -15,25 +15,20 @@ actor Main
     Debug.out("total " +  count.string())
 
 primitive R
-   fun rule1 (i':USize): Bool =>
-      let s:String = i'.string()
-       try
-         let r = Regex("(\\d)\\1")?
-         let m = MatchIterator(r,s)
-         for matched in m do
-          if not s.contains(matched(1)?.mul(3)) then
-           return true
-          end
-         end
-         false
-       else
-         false
-       end
 
-  fun rule2 (i':USize): Bool =>
-    let s: String = i'.string()   
+   fun rule1 (i: USize): Bool =>
+     let s: String = i.string()   
+     try 
+       Iter[Match](MatchIterator(Regex("(\\d)\\1")?,s))
+	.any({(m)? => not s.contains(m(1)?.mul(3)) })
+     else
+       false
+     end
+
+  fun rule2 (i: USize): Bool =>
+    let s: String = i.string()   
     not Iter[USize](Range(0,s.size()-1))
-        .any({(c: USize)? => s(c)? > s(c+1)?})
+        .any({(c: USize)? => s(c)? > s(c+1)? })
      
 
 
