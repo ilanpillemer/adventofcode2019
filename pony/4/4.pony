@@ -6,18 +6,16 @@ use "itertools"
 actor Main
   new create(env: Env) =>
     env.out.print("2019 Day 4")
-
     var count:USize = 
     Iter[USize](Range(347312,805915))
+     .map[String]({(i) => i.string()})
      .filter(R~rule1())
      .filter(R~rule2())
      .count()
     Debug.out("total " +  count.string())
 
 primitive R
-
-   fun rule1 (i: USize): Bool =>
-     let s: String = i.string()   
+   fun rule1 (s: String ): Bool =>
      try 
        Iter[Match](MatchIterator(Regex("(\\d)\\1")?,s))
 	.any({(m)? => not s.contains(m(1)?.mul(3)) })
@@ -25,8 +23,7 @@ primitive R
        false
      end
 
-  fun rule2 (i: USize): Bool =>
-    let s: String = i.string()   
+  fun rule2 (s: String): Bool =>
     not Iter[USize](Range(0,s.size()-1))
         .any({(c: USize)? => s(c)? > s(c+1)? })
      
