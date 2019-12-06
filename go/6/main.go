@@ -28,17 +28,11 @@ func main() {
 	you := path("SAN", rtree, []string{"SAN"})
 	santa := path("YOU", rtree, []string{"YOU"})
 	outerspace := connect(you, santa)
+
 	leg1 := len(santa) - len(outerspace)
 	leg2 := len(you) - len(outerspace)
 
 	fmt.Println("journey length: ", (leg1+leg2)-2)
-}
-
-func max(a int, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 func connect(src []string, dst []string) []string {
