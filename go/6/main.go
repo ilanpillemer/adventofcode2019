@@ -11,7 +11,6 @@ func main() {
 	in := bufio.NewScanner(os.Stdin)
 	tree := map[string]string{}
 	rtree := map[string]string{}
-	//	leafs := map[string]bool{}
 	nodes := map[string]bool{}
 	for in.Scan() {
 		l := in.Text()
@@ -21,24 +20,54 @@ func main() {
 		nodes[e[0]] = true
 		nodes[e[1]] = true
 	}
-	for k, v := range rtree {
-		//		leafs[v] = true
-		fmt.Println(k, "=>", v)
-	}
-
-	//	fmt.Println("D", height("D", rtree, 0))
 	total := 0
 	for k := range nodes {
 		total += height(k, rtree, 0)
-//		fmt.Println(k, height(k, rtree, 0))
 	}
-	fmt.Println("total", total)
+	fmt.Println("orbit count checksum", total)
+	you := path("SAN", rtree, []string{"SAN"})
+	santa := path("YOU", rtree, []string{"YOU"})
+	solution := connect(you, santa)
+	leg1 := len(santa) - len(solution)
+	leg2 := len(you) - len(solution)
 
+	fmt.Println("journey length: ", (leg1+leg2)-2)
+}
+
+func max(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func connect(src []string, dst []string) []string {
+	c := []string{}
+	lsrc := len(src) - 1
+	ldst := len(dst) - 1
+	for {
+		if src[lsrc] != dst[ldst] {
+			return c
+		}
+		c = append(c, src[lsrc])
+		lsrc--
+		ldst--
+		continue
+	}
+}
+
+func path(child string, tree map[string]string, p []string) []string {
+	parent := tree[child]
+	if parent == "COM" {
+		p = append(p, "COM")
+		return p
+	}
+	p = append(p, parent)
+	return path(parent, tree, p)
 }
 
 func height(child string, tree map[string]string, count int) int {
 	parent := tree[child]
-	//	fmt.Println("p", parent)
 	if parent == "" {
 		return count
 	}
