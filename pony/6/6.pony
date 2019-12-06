@@ -18,26 +18,23 @@ class A
     end
     
   fun dispose() =>
-    try
+      //Part 1
       let total = Iter[String](_nodes.values())
         .map[U32](M~height(where h = 0, e = copy()))
         .fold[U32](0,{(acc, x) => acc + x})
       Debug.out("Total heights of all subtrees: " + total.string())
+
+      //Part 2 distance from santa to you in graph
       let santa = M.path("SAN", copy(), Array[String])
       let you = M.path("YOU", copy(), Array[String])
-      var common:U32 = 0
-      for i in Range(0,santa.size()) do
-         if santa(i)? == you(i)? then
-           common = common + 1
-         else
-           break
-         end
-      end  
+      var common = 
+        Iter[USize](Range(0,santa.size()))
+         .take_while({(i)? => santa(i)? == you(i)?})
+	 .count()
       let leg1 = santa.size() - common.usize()
       let leg2 = you.size() - common.usize()  
       let length = (leg1 + leg2)
-      Debug.out(length.string())
-    end
+      Debug.out("Distance from Santa to You: " + length.string())
   
   fun copy(): Map[String, String] val =>
     try
