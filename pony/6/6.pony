@@ -56,7 +56,6 @@ primitive M
 
   fun val path(s: String, e: Map[String,String] val,p: Array[String]): Array[String] =>
     let parent = e.get_or_else(s,"")
-//    Debug.out(parent)
     if parent == "COM" then
       p.unshift(parent)
       return p
