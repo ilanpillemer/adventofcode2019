@@ -18,12 +18,28 @@ class A
     end
     
   fun dispose() =>
-    let total = Iter[String](_nodes.values())
-      .map[U32](M~height(where h = 0, e = copy()))
-      .fold[U32](0,{(acc, x) => acc + x})
-    Debug.out("Total heights of all subtrees: " + total.string())
-
-  fun copy() : Map[String, String] val =>
+    try
+      let total = Iter[String](_nodes.values())
+        .map[U32](M~height(where h = 0, e = copy()))
+        .fold[U32](0,{(acc, x) => acc + x})
+      Debug.out("Total heights of all subtrees: " + total.string())
+      let santa = M.path("SAN", copy(), Array[String])
+      let you = M.path("YOU", copy(), Array[String])
+      var common:U32 = 0
+      for i in Range(0,santa.size()) do
+         if santa(i)? == you(i)? then
+           common = common + 1
+         else
+           break
+         end
+      end  
+      let leg1 = santa.size() - common.usize()
+      let leg2 = you.size() - common.usize()  
+      let length = (leg1 + leg2)
+      Debug.out(length.string())
+    end
+  
+  fun copy(): Map[String, String] val =>
     try
       let c = recover iso Map[String,String] end
       for k in _edges.keys() do
@@ -33,10 +49,22 @@ class A
     else
       recover val Map[String,String] end
   end
+  
 
 primitive M
   fun val height(s: String, e: Map[String,String] val,h: U32): U32 =>
     let parent = e.get_or_else(s,"")
     if parent == "" then return h end
     height(parent, e, h + 1)
+
+  fun val path(s: String, e: Map[String,String] val,p: Array[String]): Array[String] =>
+    let parent = e.get_or_else(s,"")
+//    Debug.out(parent)
+    if parent == "COM" then
+      p.unshift(parent)
+      return p
+    end
+    p.unshift(parent)
+    path(parent,e,p)
+    
     
