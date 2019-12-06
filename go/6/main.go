@@ -27,7 +27,7 @@ func main() {
 	fmt.Println("orbit count checksum", total)
 	you := path("SAN", rtree, []string{"SAN"})
 	santa := path("YOU", rtree, []string{"YOU"})
-	outerspace := connect(you, santa)
+	outerspace := common(you, santa)
 
 	leg1 := len(santa) - len(outerspace)
 	leg2 := len(you) - len(outerspace)
@@ -35,7 +35,7 @@ func main() {
 	fmt.Println("journey length: ", (leg1+leg2)-2)
 }
 
-func connect(src []string, dst []string) []string {
+func common(src []string, dst []string) []string {
 	c := []string{}
 	lsrc := len(src) - 1
 	ldst := len(dst) - 1
