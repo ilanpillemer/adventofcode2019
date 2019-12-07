@@ -9,51 +9,118 @@ import (
 	"strings"
 )
 
-//part 1 is the answer for noun = 12 and verb = 2
 var orig = []string{}
+
+var progA = []string{}
+var progB = []string{}
+var progC = []string{}
+var progD = []string{}
+var progE = []string{}
 
 func main() {
 	b, _ := ioutil.ReadAll(os.Stdin)
 	orig = strings.Split(string(b), ",")
+	progA := make([]string, len(orig))
+	progB := make([]string, len(orig))
+	progC := make([]string, len(orig))
+	progD := make([]string, len(orig))
+	progE := make([]string, len(orig))
+
+	copy(progA, orig)
+	copy(progB, orig)
+	copy(progC, orig)
+	copy(progD, orig)
+	copy(progE, orig)
 
 	//43210
 	max := 0
-	for i := 0; i < 100000; i++ {
-		//	for i := 43210; i < 43211; i++ {
+		for i := 0; i < 100000; i++ {
+//	for i := 98765; i < 98766; i++ {
 		str := itoa(i)
 		str = prepend(str)
-		if hasdups(str) {
+		if bad(str) {
 			continue
 		}
-
-		o1 := exec("0", str[:1])
-		o2 := exec(o1, str[1:2])
-		o3 := exec(o2, str[2:3])
-		o4 := exec(o3, str[3:4])
-		o5 := exec(o4, str[4:5])
-
+		fmt.Println(str)
+		o1, out1 := "", ""
+		o2, out2 := "", ""
+		o3, out3 := "", ""
+		o4, out4 := "", ""
+		o5, out5 := "0", ""
+		pc1, pc2, pc3, pc4, pc5 := 0, 0, 0, 0, 0
+		done := false
 		//		fmt.Println(str[:1])
 		//		fmt.Println(str[1:2])
 		//		fmt.Println(str[2:3])
 		//		fmt.Println(str[3:4])
 		//		fmt.Println(str[4:5])
+
+		//	check := ""
+		//		j := 0
+		for {
+			//			fmt.Println(j)
+			//			j++
+
+			o1, pc1, out1, done = exec(o5, str[:1], progA, pc1, out1)
+			if done {
+				//	fmt.Println("A HALTED", o1, pc1)
+				//	fmt.Println(o1)
+				break
+			}
+			o2, pc2, out2, done = exec(o1, str[1:2], progB, pc2, out2)
+			if done {
+				//	fmt.Println("B HALTED")
+				break
+			}
+			o3, pc3, out3, done = exec(o2, str[2:3], progC, pc3, out3)
+			if done {
+				//	fmt.Println("C HALTED")
+				break
+			}
+			o4, pc4, out4, done = exec(o3, str[3:4], progD, pc4, out4)
+			if done {
+				//	fmt.Println("D HALTED")
+				break
+			}
+			o5, pc5, out5, done = exec(o4, str[4:5], progE, pc5, out5)
+			if done {
+				//		fmt.Println("E HALTED")
+				break
+			}
+			//	fmt.Println("outputs", o1, o2, o3, o4, o5)
+			//	fmt.Println("pcs", pc1, pc2, pc3, pc4, pc5)
+			//			if check == o5 {
+			//				fmt.Println("broken... caught in a loop")
+			//				break
+			//			}
+			//			check = o5
+
+			//		fmt.Println("output E", o5)
+		}
+
 		if atoi(o5) > max {
 			max = atoi(o5)
 		}
-	//	fmt.Println(o5, "<====", str)
+		fmt.Println(o5, "<====", str)
 	}
 	fmt.Println("max thruster", max)
 
 }
 
-func hasdups(str string) bool {
+func bad(str string) bool {
 	dup := map[string]bool{}
 	dup[str[:1]] = true
 	dup[str[1:2]] = true
 	dup[str[2:3]] = true
 	dup[str[3:4]] = true
 	dup[str[4:5]] = true
-	return len(dup) < 5
+	_, ok0 := dup["0"]
+	_, ok1 := dup["1"]
+	_, ok2 := dup["2"]
+	_, ok3 := dup["3"]
+	_, ok4 := dup["4"]
+
+	return len(dup) < 5 || ok1 || ok2 || ok3 || ok4 || ok0
 }
 
 func abs(i int) int {
@@ -70,16 +137,13 @@ func prepend(s string) string {
 	return s
 }
 
-func exec(input string, signal string) string {
+func exec(input string, signal string, prog []string, pc int, o string) (string, int, string, bool) {
 	signalled := false
-	prog := make([]string, len(orig))
-	copy(prog, orig)
-	pc := 0
-	//part1
-	//	input := "1"
-	//part2
-	//	input := "5"
-	outsignal := ""
+	if o != "" {
+		signalled = true
+	}
+	outsignal := o
+
 	//Loop:
 	for {
 		precode := prog[pc]
@@ -119,7 +183,7 @@ func exec(input string, signal string) string {
 			//fmt.Println("output => ", output)
 			outsignal = itoa(output)
 			pc = pc + 2
-
+			return outsignal, pc, outsignal, false
 		// jumps
 		case "5", "05": //jump if true
 			p1 := atoi(prog[pc+1])
@@ -171,9 +235,9 @@ func exec(input string, signal string) string {
 		case "99":
 			//	fmt.Println("HALT!")
 			//fmt.Println("POS 0", prog[0])
-			//fmt.Println("halt output => ", outsignal)
-
-			return outsignal
+			fmt.Println("halt output => ", outsignal)
+			//os.Exit(0)
+			return outsignal, pc, outsignal, true
 			//break Loop
 		default:
 			fmt.Println("code", code, mode1)
