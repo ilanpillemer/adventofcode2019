@@ -92,7 +92,6 @@ actor Machine
      try
        Debug.out(_mem(0)?.string() + " at 0 for " + _noun.string() + _verb.string() )
      end
-     Debug.out("halted")
      None
 
 
