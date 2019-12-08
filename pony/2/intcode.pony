@@ -15,7 +15,7 @@ class A
      .map[USize](C~usize())
      .map_stateful[None]({(i) => mem'.push(i)  } )
      .run()
-    let mem'' = copy(mem')
+    let mem'' = mem'.clone()
     
     mem'(1)? = 12
     mem'(2)? = 2
@@ -46,15 +46,6 @@ class A
       mem'.push(m)
     end
     consume mem'
-
-  fun copy(mem: Mem ref): Mem ref =>
-    let mem': Mem = Mem
-    for m in mem.values() do
-      mem'.push(m)
-    end
-    mem'
-
-
 
 primitive C
   fun usize(s: String): USize ?  =>
