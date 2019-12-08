@@ -30,6 +30,10 @@ actor Machine
   var _noun : USize = 0
   var _verb : USize = 0
 
+  var _nvmode : Bool = false
+  var _loc : USize = 0
+  var _value : USize = 0
+  
   new create(mem: Mem iso) =>
     _mem = consume mem
     try
@@ -86,11 +90,19 @@ actor Machine
       _mem(2)? = verb
      end
      None
+
+   be set_nvmode(loc: USize, value: USize) =>
+     _nvmode = true
+     _loc = loc
+     _value = value
+     None
      
 
    be halt() =>
-     try
-       Debug.out(_mem(0)?.string() + " at 0 for " + _noun.string() + _verb.string() )
+     try 
+       if (_mem(_loc)? == _value) and _nvmode then
+         Debug.out(_mem(_loc)?.string() + " at " + _loc.string() + " for " + _noun.string() + _verb.string() )
+       end
      end
      None
 

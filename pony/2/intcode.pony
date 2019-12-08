@@ -23,6 +23,7 @@ class A
       machine.set_noun(noun)
       machine.set_verb(verb)
       machine.exec()
+      machine.set_nvmode(0,19690720)
      end
    end
    
