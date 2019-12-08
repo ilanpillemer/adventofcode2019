@@ -1,5 +1,6 @@
 use "debug"
 use "itertools"
+use "collections"
 
 actor Main
   new create(env: Env) =>
@@ -9,14 +10,14 @@ actor Main
 
 class A
   fun ref apply(s: String) =>
-    var mem': Mem = Mem
+    var mem: Mem = Mem
     Iter[String](s.split(",").values())
      .map[USize](C~usize())
-     .map_stateful[None]({(i) => mem'.push(i)  } )
+     .map_stateful[None]({(i) => mem.push(i)  } )
      .run()
 
-   let m = to_iso(mem'.clone())
-   let m' = to_iso(mem'.clone())   
+   let m = to_iso(mem.clone())
+   let m' = to_iso(mem.clone())   
 
    let machine: Machine = Machine(consume m)
    let machine': Machine = Machine(consume m')
