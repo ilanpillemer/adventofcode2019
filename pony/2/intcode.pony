@@ -10,25 +10,51 @@ actor Main
 class A
   fun ref apply(s: String) =>
   try
-    let mem : Array[USize] iso =
-     recover
-       var mem': Array[USize] = Array[USize]
-       Iter[String](s.split(",").values())
-         .map[USize](C~usize())
-	 .map_stateful[None]({(i) => mem'.push(i)  } )
-	 .run()
-      mem'(1)? = 12
-      mem'(2)? = 2
-      mem'
-     end
+    var mem': Mem = Mem
+    Iter[String](s.split(",").values())
+     .map[USize](C~usize())
+     .map_stateful[None]({(i) => mem'.push(i)  } )
+     .run()
+    let mem'' = copy(mem')
+    
+    mem'(1)? = 12
+    mem'(2)? = 2
 
-    let m: Machine = Machine(consume mem)
-    m.exec()
+    mem''(1)? = 23
+    mem''(2)? = 47
+
+   let mem: Array[Mem] = Array[Mem]
+   mem.push(mem')
+   mem.push(mem'')
+
+   let m = to_iso(mem(0)?)
+   let m' = to_iso(mem(1)?)   
+
+   let machine: Machine = Machine(consume m)
+   let machine2: Machine = Machine(consume m')
+   machine.exec()
+   machine2.exec()
   end
       
 
   fun dispose() =>
     None
+
+  fun to_iso(mem: Mem ref): Mem iso^ =>
+    let mem': Mem iso = recover Mem end
+    for m in mem.values() do
+      mem'.push(m)
+    end
+    consume mem'
+
+  fun copy(mem: Mem ref): Mem ref =>
+    let mem': Mem = Mem
+    for m in mem.values() do
+      mem'.push(m)
+    end
+    mem'
+
+
 
 primitive C
   fun usize(s: String): USize ?  =>
