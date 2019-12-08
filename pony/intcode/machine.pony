@@ -27,9 +27,16 @@ actor Machine
   let _mem : Mem ref
   var _pc : USize = 0
 
+  var _noun : USize = 0
+  var _verb : USize = 0
+
   new create(mem: Mem iso) =>
     _mem = consume mem
-
+    try
+     _noun = _mem(1)?
+     _verb = _mem(2)?
+    end
+   
   be exec() =>
     try
       while true do
@@ -44,7 +51,6 @@ actor Machine
 
    be add(op1: Data val, op2: Data val, ad3: Address val) =>
      try
-       Debug.out("add:")
        match (op1, op2)
         | (let ad1: Address, let ad2: Address) => _mem(ad3())? =  _mem(ad1())? + _mem(ad2())?
         | (let ad1: Address, let v2: Val) => _mem(ad3())? =  _mem(ad1())? + v2()
@@ -57,7 +63,6 @@ actor Machine
 
    be mul(op1: Data val, op2: Data val, ad3: Address val) =>
      try
-       Debug.out("mul:")
        match (op1, op2)
         | (let ad1: Address, let ad2: Address) => _mem(ad3())? =  _mem(ad1())? * _mem(ad2())?
         | (let ad1: Address, let v2: Val) => _mem(ad3())? =  _mem(ad1())? * v2()
@@ -68,12 +73,24 @@ actor Machine
        end
      end
 
-   be halt() =>
-     // for v in _mem.values() do
-     //   Debug.out(v.string())
-     // end
+   be set_noun(noun: USize)  =>
      try
-       Debug.out("Pos 0: " + _mem(0)?.string())
+      _noun = noun
+      _mem(1)? = noun
+     end
+     None
+
+   be set_verb(verb: USize)  =>
+     try
+      _verb = verb
+      _mem(2)? = verb
+     end
+     None
+     
+
+   be halt() =>
+     try
+       Debug.out(_mem(0)?.string() + " at 0 for " + _noun.string() + _verb.string() )
      end
      Debug.out("halted")
      None

@@ -27,12 +27,17 @@ actor Machine
   let _mem : Mem ref
   var _pc : USize = 0
 
+  var _noun : USize = 0
+  var _verb : USize = 0
+
   new create(mem: Mem iso) =>
     _mem = consume mem
-    Debug.out("Machine created")
-
+    try
+     _noun = _mem(1)?
+     _verb = _mem(2)?
+    end
+   
   be exec() =>
-    Debug.out("machine executing")
     try
       while true do
       let op = _mem(_pc)?
@@ -68,15 +73,24 @@ actor Machine
        end
      end
 
-   be display() =>
-     for v in _mem.values() do
-        Debug.out(v.string())
+   be set_noun(noun: USize)  =>
+     try
+      _noun = noun
+      _mem(1)? = noun
      end
-   
+     None
+
+   be set_verb(verb: USize)  =>
+     try
+      _verb = verb
+      _mem(2)? = verb
+     end
+     None
+     
 
    be halt() =>
      try
-       Debug.out("Pos 0: " + _mem(0)?.string())
+       Debug.out(_mem(0)?.string() + " at 0 for " + _noun.string() + _verb.string() )
      end
      Debug.out("halted")
      None
