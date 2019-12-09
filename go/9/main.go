@@ -18,20 +18,17 @@ func main() {
 	b, _ := ioutil.ReadAll(os.Stdin)
 	orig := strings.Split(string(b), ",")
 
-	//	prog := make([]string, len(orig))
 	prog := make([]string, math.MaxInt32)
 
 	copy(prog, orig)
 	pc := 0
 	base := 0
-	input := "1"
+	input := "2"
 	fmt.Println("starting")
-	//fmt.Println(prog)
 
 Loop:
 	for {
 		precode := prog[pc]
-		//	fmt.Println("precode", precode)
 		code, mode1, mode2, mode3 := modes(precode)
 		switch code {
 		case "1", "01": //addition
@@ -59,34 +56,17 @@ Loop:
 		// instructions with one parameter
 		case "3", "03": //save
 			p1 := atoi(prog[pc+1])
-			//op1 := getvalue(mode1, p1, prog, base)
+			//p1 is zero
+			//base is 1000
 			if mode1 == 2 {
 				p1 = base + p1
 			}
-			fmt.Println("precode", precode)
-			fmt.Println("op is \t", prog[pc])
-			fmt.Println("operand is \t", prog[pc+1])
-			fmt.Println("value at prog[pc + 1]\t", prog[pc+1])
-			fmt.Println("relative base is", base)
-			//		fmt.Println("relative pointer should be", base+p1)
-
-			fmt.Println("relative pointer is", p1)
-
-			//			if mode1 == 2 {
-			//				p1 = p1 + base
-			//			}
-
 			prog[p1] = input
-
 			pc = pc + 2
 		case "4", "04": //output
 			p1 := atoi(prog[pc+1])
 			output := getvalue(mode1, p1, prog, base)
-			//fmt.Println("mode1", mode1)
-			//fmt.Println("p1", p1)
 			fmt.Println("output => ", output)
-			//fmt.Print(" .. ", output)
-			//	fmt.Print(" ", prog[output])
 			pc = pc + 2
 		// jumps
 		case "5", "05": //jump if true
@@ -121,14 +101,7 @@ Loop:
 			if mode3 == 2 {
 				p3 = base + p3
 			}
-			op3 := getvalue(mode3, p3, prog, base)
-			if mode3 == 2 || mode2 == 2 || mode1 == 2 {
-				fmt.Println()
-				fmt.Println("mode1", mode1)
-				fmt.Println("mode2", mode2)
-				fmt.Println("mode3", mode3)
-				fmt.Println("plus", mode3, op3)
-			}
+
 			if op1 < op2 {
 				prog[p3] = strconv.Itoa(1)
 			} else {
@@ -144,14 +117,7 @@ Loop:
 			if mode3 == 2 {
 				p3 = base + p3
 			}
-			op3 := getvalue(mode3, p3, prog, base)
-			if mode3 == 2 || mode2 == 2 || mode1 == 2 {
-				fmt.Println()
-				fmt.Println("mode1", mode1)
-				fmt.Println("mode2", mode2)
-				fmt.Println("mode3", mode3)
-				fmt.Println("plus", mode3, op3)
-			}
+
 			if op1 == op2 {
 				prog[p3] = strconv.Itoa(1)
 			} else {
@@ -161,13 +127,6 @@ Loop:
 		case "9", "09": //change relative base
 			p1 := atoi(prog[pc+1])
 			op1 := getvalue(mode1, p1, prog, base)
-			//			fmt.Println("relative base change")
-			//			fmt.Println("current base", base)
-			//			fmt.Println("p1", p1)
-			//			fmt.Println("op1", op1)
-			//			fmt.Println("mode", mode1)
-			//			fmt.Println("new base", base+op1)
-
 			base = base + op1
 
 			pc = pc + 2
@@ -182,8 +141,7 @@ Loop:
 			panic("oh dear")
 		}
 	}
-	//		} //j
-	//	}//i
+
 }
 
 func itoa(i int) string {
@@ -251,7 +209,6 @@ func modes(s string) (opcode string, mode1 int, mode2 int, mode3 int) {
 	}
 
 	if len(s) == 5 {
-		fmt.Println(s)
 		opcode = s[3:]
 		mode1 = atoi(s[2:3])
 		mode2 = atoi(s[1:2])
