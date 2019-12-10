@@ -32,7 +32,7 @@ func main() {
 	}
 	maxy = y
 	display(grid)
-	//displayCounts(grid)
+	displayCounts(grid)
 	maxVisible(grid)
 	t := targets(P{11, 13}, grid)
 	fmt.Println("#keys ", len(t))
@@ -43,14 +43,31 @@ func main() {
 	sort.Ints(keys)
 	//sort.Sort(sort.Reverse(sort.IntSlice(keys)))
 	i := 1
+	start := false
 	//145 for test 2
+	up := 15707963267 // pi / 2
 	for _, k := range keys {
-		fmt.Println(i-160, k, t[k])
-		i++
+		//	fmt.Println(i, k, t[k])
+		if k == up {
+			start = true
+		}
+		if i == 200 {
+			fmt.Println("200th asteroid destroyed:", t[k])
+		}
+		if start {
+			i++
+		}
+
 	}
 	for _, k := range keys {
-		fmt.Println(i-160, k, t[k])
-		i++
+		//	fmt.Println(i, k, t[k])
+	if i == 200 {
+			fmt.Println("200th asteroid destroyed:", t[k])
+		}
+		if start {
+			i++
+		}
+
 	}
 
 }
@@ -100,10 +117,10 @@ func displayCounts(grid map[P]bool) {
 	for y := 0; y < maxy; y++ {
 		for x := 0; x < maxx; x++ {
 			if grid[P{x, y}] {
-				fmt.Print(visible(P{x, y}, grid))
+				fmt.Printf("%4d", visible(P{x, y}, grid))
 				continue
 			}
-			print(".")
+			print(" .. ")
 		}
 		fmt.Println()
 	}
