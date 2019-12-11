@@ -219,9 +219,9 @@ func display(grid map[P]int, current P) {
 		for x := 0; x < 40; x++ {
 			switch grid[P{x, y}] {
 			case 0:
-				fmt.Print("🐰")
+				fmt.Print(" ")
 			case 1:
-				fmt.Printf("🦄")
+				fmt.Printf("#")
 			}
 
 		}
