@@ -12,7 +12,6 @@ type T struct {
   y int
 }
 
-
 const (
  empty = 0
  wall = 1
@@ -22,6 +21,7 @@ const (
 )
 
 func main () {
+  score := 0
    tiles := map[T]int{}
    in := bufio.NewScanner(os.Stdin)
    for in.Scan() {
@@ -30,8 +30,13 @@ func main () {
    y:= atoi( in.Text())
    in.Scan()
    typ := atoi( in.Text())
-   t := T{x,y}
-  tiles[t] = typ
+   if x == -1 && y ==0 {
+     score = typ
+   } else {
+    t := T{x,y}
+    tiles[t] = typ
+   }
+
 //    log.Print(t)
    }
    log.Println("total tiles", len(tiles))
@@ -42,6 +47,7 @@ func main () {
      }
    }
   log.Println("total block tiles", blocks)
+  log.Println("score", score)
  }
 
  func atoi(a string) int {

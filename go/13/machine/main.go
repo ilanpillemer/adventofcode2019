@@ -8,22 +8,28 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"flag"
+//	"log"
 )
 
 //part 1 is the answer for noun = 12 and verb = 2
 const MaxUint = ^uint(0)
 const MaxInt = int(MaxUint >> 1)
 
+var input = flag.Int("-input" , 0,  "joystick" )
+
 func main() {
+         flag.Parse()
 	b, _ := ioutil.ReadAll(os.Stdin)
 	orig := strings.Split(string(b), ",")
 
 	prog := make([]string, math.MaxInt32)
 
 	copy(prog, orig)
+	prog[0] = "2"
 	pc := 0
 	base := 0
-	input := "2"
+//	input := "2"
 
 
 Loop:
@@ -61,12 +67,15 @@ Loop:
 			if mode1 == 2 {
 				p1 = base + p1
 			}
-			prog[p1] = input
+			prog[p1] = itoa(*input)
 			pc = pc + 2
 		case "4", "04": //output
 			p1 := atoi(prog[pc+1])
 			output := getvalue(mode1, p1, prog, base)
 			fmt.Println(output)
+			if output > 2 {
+			 // log.Println("score", output)
+			}
 			pc = pc + 2
 		// jumps
 		case "5", "05": //jump if true
