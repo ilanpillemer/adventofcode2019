@@ -1,0 +1,25 @@
+use "debug"
+use "collections"
+
+actor Main
+  new create (env: Env) =>
+    Debug("Pony Day 14")
+    env.input(recover LineNotify(A) end, 512)
+
+class A
+
+  var reqs : Map[String,Array[String]] = Map[String,Array[String]]
+  fun ref apply(s: String) =>
+    try
+      let u = s.trim().split("=>")
+      reqs.insert(u(2)?.trim(),u(0)?.split(","))
+    end
+
+    fun dispose() =>
+    try
+      for k in reqs.keys() do
+      	  Debug(reqs(k)?)
+      end
+    end
+    None
+
